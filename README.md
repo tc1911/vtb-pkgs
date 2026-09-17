@@ -156,9 +156,16 @@ bash open-vt-bin/make_openvt_pkg.sh
 # psd2live-bin：需要源码 + JDK 21 + gradle（脚本内用 ./gradlew createDistributable）
 bash psd2live-bin/make_psd2live_pkg.sh
 
-# openseeface：需要一份 OpenSeeFace 源码树（*.py + models/）
+# openseeface：需要一份 OpenSeeFace 源码树（*.py + models/ + Licenses/）
 cd openseeface && makepkg -f
 ```
+
+⚠️ `openseeface/PKGBUILD` 的 `source` 指向**本机路径**
+（`file://${HOME}/opt/openvt-pkg/openseeface/openseeface-src.tar.gz`），
+那个 tarball **没有随 Release 发布**，所以别人拿了仓库也无法直接构建它。
+想要一个公开可重建的 openseeface，用 AUR 的 `openseeface-git`；本仓库这份 PKGBUILD
+是我自己机器的复刻记录，它比 AUR 版多做一件事：把上游要求随附的 `Licenses/` 一并装进
+`/usr/share/licenses/openseeface/`。
 
 三个脚本都在本机验证过。`open-vt-bin` 用 `git rev-list --count HEAD` 拼版本号，
 浅克隆会得到 `.r1`（上游仓库没有 tag）。
