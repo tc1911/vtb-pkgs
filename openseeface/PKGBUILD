@@ -1,0 +1,67 @@
+# Maintainer: 本地复刻（对照 AUR 的 openseeface-git，但 source 走本地目录）
+#
+# 为什么要自己打一份：AUR 的 openseeface-git 用
+#     source=("git+https://github.com/emilianavt/OpenSeeFace.git")
+# 而这台机器的 github 是墙的（只有 gh-proxy.com 通），直接 paru -S 会卡在下载。
+# 本文件用本地已有的完整上游检出当 source，离线可构建，产出的文件布局与 AUR 版一致
+# （/usr/bin/facetracker + site-packages/openseeface/，模型也随包安装），
+# 所以以后真从 AUR 升级不会冲突。
+#
+# 用法:
+#   cd ~/opt/openvt-pkg/openseeface && makepkg -f
+#   sudo pacman -U openseeface-*.pkg.tar.zst
+pkgname=openseeface
+pkgver=1.20.5
+pkgrel=1
+pkgdesc='OpenSeeFace - robust realtime CPU face/facial-landmark tracking (facetracker CLI + bundled models)'
+arch=('x86_64')
+url="https://github.com/emilianavt/OpenSeeFace"
+license=('BSD-2')
+# 注意: python-onnxruntime 只存在于 AUR；官方仓库提供的是 python-onnxruntime-cpu。
+# 用官方那个，不然 pacman -U 会因为依赖不满足直接拒绝安装。
+depends=('python' 'python-numpy' 'python-flatbuffers' 'python-onnxruntime-cpu'
+         'python-opencv' 'python-pillow' 'python-protobuf')
+optdepends=('python-opencv-cuda: CUDA 优化'
+            'onnxruntime-opt: AVX2 CPU 加速（AUR）')
+provides=('openseeface-git')
+conflicts=('openseeface-git')
+# 本地源码目录（先 tar 一下，makepkg 需要一份归档）
+source=("openseeface-src.tar.gz::file://${HOME}/opt/openvt-pkg/openseeface/openseeface-src.tar.gz")
+md5sums=('SKIP')
+
+prepare() {
+	cd "${srcdir}/OpenSeeFace"
+	# 与 AUR 版相同的处理：去掉 poetry 的 python 版本约束，把扁平脚本收进 openseeface/ 包，
+	# 并把顶层 import 改成相对 import（这样才能被 import 而不是当脚本跑）
+	sed -i '/^python =/d' pyproject.toml || true
+	mkdir -p openseeface
+	touch openseeface/__init__.py
+	cp ./*.py openseeface/
+	cp -R models openseeface/
+	sed -i 's|from input_reader|from .input_reader|' openseeface/facetracker.py
+	sed -i 's|from tracker|from .tracker|' openseeface/facetracker.py
+	sed -i 's|import escapi|from .escapi import *|' openseeface/input_reader.py
+	sed -i 's|import dshowcapture|from .dshowcapture import *|' openseeface/input_reader.py
+	sed -i 's|from similaritytransform|from .similaritytransform|' openseeface/tracker.py
+	sed -i 's|from retinaface|from .retinaface|' openseeface/tracker.py
+	sed -i 's|from remedian|from .remedian|' openseeface/tracker.py
+}
+
+package() {
+	# 直接铺进 site-packages，不经过 poetry/pip —— 产出的布局和 AUR 版一样，但不需要联网
+	local site
+	site=$(python -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')
+	install -dm755 "${pkgdir}${site}/openseeface"
+	cp -r "${srcdir}/OpenSeeFace/openseeface/." "${pkgdir}${site}/openseeface/"
+
+	# 与 AUR 版相同的入口：import 即开始跟踪（argv 透传）
+	install -dm755 "${pkgdir}/usr/bin"
+	{
+		echo '#!/usr/bin/env python'
+		echo 'import openseeface.facetracker'
+	} > "${pkgdir}/usr/bin/facetracker"
+	chmod 755 "${pkgdir}/usr/bin/facetracker"
+
+	install -Dm644 "${srcdir}/OpenSeeFace/LICENSE" \
+		"${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
