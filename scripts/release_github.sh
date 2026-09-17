@@ -71,7 +71,7 @@ cat SHA256SUMS | sed 's/^/  /'
 echo
 echo "================ dist/ 就绪 ================"
 ls -lh "$DIST" | sed 's/^/  /'
-TAG="${1:-$(basename "$(echo "${PKGS[0]}" | sed 's/^.*\///')" | sed 's/-x86_64.*//')}"
+TAG="${TAG:-v0.1.0}"   # 可用环境变量覆盖；与 RELEASE_NOTES.md 的版本号一致
 echo
 echo "  tag: $TAG"
 echo
