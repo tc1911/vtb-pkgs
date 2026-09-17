@@ -1369,3 +1369,37 @@ NAS **继续用于归档**（灾备包 37G + 模型库 + ComfyUI 模型，共 56
 
 > 教训：给自己用的东西（`file://` 本地仓库）和给别人用的东西（公网可下载的 Release）
 > 不要用同一套机制 —— 前者的便利会原样变成后者的门槛。
+
+
+## §39 本地瘦身（2026-09-18）：删了哪些、跟着改了哪些脚本
+
+**删掉**
+
+| 路径 | 大小 | 现在由什么替代 |
+|---|---|---|
+| `~/opt/openseeface`（含 `.venv` 360M） | 690M | `openseeface` pacman 包 → `/usr/bin/facetracker` |
+| `~/opt/probe-psd2live` | 398M | `psd2live-bin` 包 → `/usr/bin/psd2live`（含 MCP） |
+| `~/.gradle` | 715M | 只在从源码重建 psd2live 时需要 |
+| `/tmp` 各项暂存（openvt-stage / psd2live-pkgbuild / pkg-stage / …） | ~900M | tmpfs，重启自清 |
+
+**保留**（用户明确要留）：`~/项目/openvt` 7.5G（改 OpenVT 代码 / 重新导出用）、
+`~/opt/comfy-venv` 8.8G（再拆新立绘的 AI 管线，模型已备份到 NAS）。
+
+删掉的目录**不影响已装的包**：`open-vt-bin` 的自包含验证本来就是在构建树缺席时跑通的，
+`/usr/bin/facetracker` 与系统 python 的 numpy/pillow 都来自 openseeface 包。
+
+**跟着改的脚本**（全部 `bash -n` 通过）
+
+- `hd_gui_rig.sh`、`psd2live-run.sh`：删掉 `./gradlew` 回退分支（源码树已不存在），
+  改成明确报错并提示装 `psd2live-bin`。
+- `make_psd2live_pkg.sh`：缺 app image 时的提示补上取回源码的完整步骤
+  （`git clone` → `git checkout c8ad876` → `git apply patches/psd2live-groupindex-fix.patch` → `gradlew createDistributable`）。
+- `make_disaster_backup.sh`：02（psd2live 源码）/ 06（openseeface）两个卷加 `[ -d ]` 判断 ——
+  否则再跑一次会做出空 tar。
+- `verify_disaster_backup.sh`：目录改成可参数化（本地那份已删，传 NAS 路径即可），
+  且每个卷比对前检查源目录是否还在，不在就跳过而不是报"有差异"。
+- `psd2live_pkg_verify.sh`：本来就有 `if [ -d "$SRC" ]` 守卫，无需改。
+- `compare_split.py:109`：默认参考 PSD 仍指向旧路径，只在无参调用时才会用到，未改。
+
+**附带发现**：`/home/tc191/Live2D` 软链已不存在，但 OpenVT 的 `active_model` 存的是绝对路径
+（`/home/tc191/vtb/模型/shiro/shiro.model3.json`），所以不影响使用；模型库 `~/vtb/模型` 完好。
