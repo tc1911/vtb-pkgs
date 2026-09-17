@@ -1297,3 +1297,53 @@ field open-vt-bin-0.1.0.r1.4919304-2 SHA256SUM
 
 改对之后重验：三个包的 `%SHA256SUM%` 与 `%CSIZE%` 均与实际文件一致
 （open-vt-bin 69,192,281 / openseeface 74,645,736 / psd2live-bin 90,769,067 字节）。
+
+---
+
+## §37 打包分发到 GitHub（许可义务 + clash 代理 + Release 当 pacman 仓库）
+
+打包链从 NAS 搬到 GitHub 时踩到的东西，全部有实证。
+
+**① 分发 `openseeface` 必须带 `Licenses/` 目录**
+
+上游 README 第 132 行写着 *"When distributing it, you should also distribute the `Licenses` folder"*。
+里面是 12 个第三方库的许可（onnxruntime / OpenCV / Pytorch_Retinaface / libsvm / scikit-image /
+ThunderSVM / escapi / DShowCapture / IL2cppStartProcess / libminibmcapture / Remedian / OpenSeeFace）。
+漏了程序照跑，但不算合规分发。第一版只装了 `LICENSE` 一份 —— 包内 `share/licenses` 条目 3 个；
+补上后 16 个。改法：源包里加 `Licenses/`，`package()` 里
+`install -m644 "${srcdir}/OpenSeeFace/Licenses/"* "$pkgdir/usr/share/licenses/$pkgname/Licenses/"`。
+数条目自检：`bsdtar -tf <pkg>.pkg.tar.zst | grep -c share/licenses`。
+
+**② `psd2live` 是 GPL-3，而我们的构建带改动**
+
+构建树相对 `c8ad876` 有 3 行改动（`src/main/kotlin/io/github/psd2live/core/RigBuilder.kt`、
+`src/main/kotlin/org/umamo/interop/moc3/export/Moc3RenderOrderLowering.kt`、
+`gradle/wrapper/gradle-wrapper.properties`）外加 `gradlew` 权限位。
+GPL-3 第 6 条要求分发二进制时给出**实际构建所用的源码**，只给上游链接不满足。
+→ `scripts/make_corresponding_source.sh`：`git archive HEAD` + 覆盖 `git diff --name-only`
+列出的文件 + 补丁副本 + 说明文件，zstd 后 41.5MB / 600 条目，随 Release 发布并纳入 `SHA256SUMS`。
+
+**③ 推送前的体积检查**
+
+`git ls-files -z | xargs -0 du -b | awk '$1>1048576'` 抓大文件 —— 本仓库 12 文件共 0.1MB。
+`dist/`（234MB + 41MB 源码）必须留在 `.gitignore` 里，走 Release 而不是 git。
+
+**④ clash 全局模式不劫持直连（没有 TUN 时）**
+
+`mode: global` 只对"本就送进代理端口"的连接生效。`curl https://api.github.com` 这种直连
+不会因为切了全局就自动走代理 —— 表现是"切了全局还是 HTTP 000"。**正解是逐命令给代理**：
+`https_proxy=http://127.0.0.1:7890 curl …` → 立刻 200。
+（`git push` / `ssh` 是例外：`~/.ssh/config` 里 `github.com → ssh.github.com:443` 配了
+`ProxyCommand python3 ~/.ssh/connect-proxy.py %h %p`，自带代理，所以 SSH 推送完全不依赖
+代理模式，也不依赖 TUN，切不切全局都能推。）
+
+**⑤ Release 当 pacman 仓库**
+
+`Server = https://github.com/<user>/<repo>/releases/latest/download` 可行（GitHub 会 302 到具体资产；
+`gh-proxy.com` 前缀同样能代理 release 资产，实测 HTTP 200 全量下载）。单文件上限 2GiB，
+我们最大 90.8MB。`SigLevel = Optional TrustAll` 是免签名的代价，README 里必须写明。
+
+**⑥ 收集包的"恰好 N 个"守卫会被旧版本号触发**
+
+`release_github.sh` 那次收集到 4 个包（`openseeface-1.20.5-1` 与 `-2` 并存）→ 守卫按设计拒绝，
+整个重建失败。重打包之后**一定要删掉被取代的旧 `.pkg.tar.zst`**，否则每次发布会卡在这一步。
