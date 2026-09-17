@@ -171,7 +171,7 @@ cd openseeface && makepkg -f
 - `psd2live-bin`：装机后无参数启动，`/mcp` 端点返回 HTTP 200，
   `serverInfo` = `psd2live 0.7.1`。
 - `openseeface`：用 `--model 3 --dformat MJPG` 起，日志 `Took 5.50ms`，正常出帧。
-- NAS 仓库与 GitHub Release 上的三个包，`SHA256SUM` 与 `CSIZE` 均与 `vtb.db` 索引一致。
+- GitHub Release 上的三个包，`SHA256SUM` 与 `CSIZE` 均与 `vtb.db` 索引一致。
 
 ## 来源与许可
 

@@ -1347,3 +1347,25 @@ GPL-3 第 6 条要求分发二进制时给出**实际构建所用的源码**，�
 
 `release_github.sh` 那次收集到 4 个包（`openseeface-1.20.5-1` 与 `-2` 并存）→ 守卫按设计拒绝，
 整个重建失败。重打包之后**一定要删掉被取代的旧 `.pkg.tar.zst`**，否则每次发布会卡在这一步。
+
+---
+
+## §38 NAS pacman 仓库退役，改用 GitHub Release
+
+自建 pacman 仓库一度放在 NAS（`file:///mnt/nas_backup/折腾/vtb-live2d/repo`）。
+2026-09-18 决定退役 —— 用 NAS 当包源意味着**依赖一台常开的内网机器 + 一次挂载**，
+对"别人也能装"这件事毫无帮助；GitHub Release 本身就满足 pacman 仓库的全部要求
+（静态可下载文件 + `Server = https://github.com/<u>/<r>/releases/latest/download`，
+GitHub 会 302 到具体资产；`gh-proxy.com` 前缀同样可用）。
+
+已做的清理：
+
+- 删掉 NAS 上的 `折腾/vtb-live2d/repo/`（224M）
+- 删掉 `~/opt/vtb_repo_add.sh`、`~/opt/openvt_repo_add.sh`、仓库里的 `scripts/vtb_repo_add.sh`
+- `/etc/pacman.conf` 里从未写过 `[vtb]` 段，本机因此没有残留配置
+
+NAS **继续用于归档**（灾备包 37G + 模型库 + ComfyUI 模型，共 56G），只是不再当包仓库。
+`~/opt/upload_to_nas.sh` 与 `finish_archive_and_clean.sh` 仍然有效。
+
+> 教训：给自己用的东西（`file://` 本地仓库）和给别人用的东西（公网可下载的 Release）
+> 不要用同一套机制 —— 前者的便利会原样变成后者的门槛。
