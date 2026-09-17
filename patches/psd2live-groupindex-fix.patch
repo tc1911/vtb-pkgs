@@ -1,0 +1,41 @@
+diff --git a/gradle/wrapper/gradle-wrapper.properties b/gradle/wrapper/gradle-wrapper.properties
+index a9db115..8f73496 100644
+--- a/gradle/wrapper/gradle-wrapper.properties
++++ b/gradle/wrapper/gradle-wrapper.properties
+@@ -1,6 +1,6 @@
+ distributionBase=GRADLE_USER_HOME
+ distributionPath=wrapper/dists
+-distributionUrl=https\://services.gradle.org/distributions/gradle-9.6.1-bin.zip
++distributionUrl=https://mirrors.cloud.tencent.com/gradle/gradle-9.6.1-bin.zip
+ networkTimeout=10000
+ retries=0
+ retryBackOffMs=500
+diff --git a/gradlew b/gradlew
+old mode 100644
+new mode 100755
+diff --git a/src/main/kotlin/io/github/psd2live/core/RigBuilder.kt b/src/main/kotlin/io/github/psd2live/core/RigBuilder.kt
+index f4d6c1e..cc22952 100644
+--- a/src/main/kotlin/io/github/psd2live/core/RigBuilder.kt
++++ b/src/main/kotlin/io/github/psd2live/core/RigBuilder.kt
+@@ -532,7 +532,7 @@ object RigBuilder {
+ 			// Cubism 5.0/MOC v5 is the compatibility baseline.  The generated rig does not use any
+ 			// 5.3-only feature, and targeting v5 keeps it readable by both current Viewer releases and
+ 			// older Cubism 5 runtimes without relying on v6-only container fields.
+-			runtimeTarget = RuntimeTarget.Cubism50,
++			runtimeTarget = RuntimeTarget.Ayagami,
+ 		).withDerivedRenderRoot()
+ 		val faceCenterCanvas = faceRig.coordinateSpace.toCanvas(faceRig.centerX, faceRig.centerY)
+ 		return BuiltRig(
+diff --git a/src/main/kotlin/org/umamo/interop/moc3/export/Moc3RenderOrderLowering.kt b/src/main/kotlin/org/umamo/interop/moc3/export/Moc3RenderOrderLowering.kt
+index f39183d..3a6b43b 100644
+--- a/src/main/kotlin/org/umamo/interop/moc3/export/Moc3RenderOrderLowering.kt
++++ b/src/main/kotlin/org/umamo/interop/moc3/export/Moc3RenderOrderLowering.kt
+@@ -47,7 +47,7 @@ internal fun lowerRenderOrder(puppet: PuppetModel, plan: Moc3IndexPlan): List<Re
+ 					val drawableIndex = plan.drawableIndex(child.id)
+ 					if (drawableIndex >= 0) {
+ 						// MOC3 §5.6 render-order child kind 0: an art-mesh leaf.  groupIndex is unused for a leaf.
+-						children.add(RenderOrderChild(kind = 0, index = drawableIndex, groupIndex = 0))
++						children.add(RenderOrderChild(kind = 0, index = drawableIndex, groupIndex = -1))
+ 					}
+ 				}
+ 				is RenderGroup -> {

@@ -47,6 +47,7 @@ field() { bsdtar -xOf vtb.db.tar.gz "$1/desc" | sed -n "/^%$2%$/{n;p}"; }
 FAIL=0
 for p in ./*.pkg.tar.zst; do
 	key=$(basename "$p" .pkg.tar.zst)
+	key=${key%-x86_64}   # 索引里的目录名是 <name>-<ver>-<rel>，**不带架构**；而文件名带
 	idx_sha=$(field "$key" SHA256SUM)
 	idx_size=$(field "$key" CSIZE)
 	[ -n "$idx_sha" ] || { echo "  ✗ $key 索引里没有 SHA256SUM（字段名写错？）"; FAIL=1; continue; }
@@ -60,8 +61,11 @@ for p in ./*.pkg.tar.zst; do
 done
 [ "$FAIL" = 0 ] || exit 1
 
+echo "== 4.5/5 生成 psd2live 的对应源码（GPL-3 第 6 条义务，不是可选项）=="
+bash "$REPO/scripts/make_corresponding_source.sh" 2>&1 | sed 's/^/  /'
+
 echo "== 5/5 写 SHA256SUMS =="
-sha256sum ./*.pkg.tar.zst > SHA256SUMS
+sha256sum ./*.pkg.tar.zst ./*-corresponding-source.tar.zst > SHA256SUMS
 cat SHA256SUMS | sed 's/^/  /'
 
 echo

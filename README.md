@@ -140,6 +140,13 @@ fe58bbae22230af467524af00194b32281368a7830e44a6e3f96c2fb86190a55  open-vt-bin-0.
    所以 `import openseeface.facetracker` 就会真的开始追踪（命令行参数从 `sys.argv` 读）——
    AUR 那份装的 `/usr/bin/facetracker` 就是这个形式，能用。
 
+9. **分发 `openseeface` 必须带上 `Licenses/` 目录。** 上游 README 第 132 行写明
+   *"When distributing it, you should also distribute the `Licenses` folder"* ——
+   里面是 12 个第三方库的许可。漏了它程序照跑，但就不算合规分发。
+
+10. **`psd2live` 是 GPL-3，而这里的构建带 3 行改动。** 分发它的二进制时
+    必须一并给出对应源码，详见上面「来源与许可」小节 —— 这不是可选项。
+
 ## 从源码重建
 
 ```bash
@@ -168,12 +175,41 @@ cd openseeface && makepkg -f
 
 ## 来源与许可
 
-| 上游 | 版本/提交 | 许可 |
-|---|---|---|
-| [erodozer/open-vt](https://github.com/erodozer/open-vt) | `4919304` | MIT（Godot 引擎 MIT + 本项目 MIT） |
-| [emilianavt/OpenSeeFace](https://github.com/emilianavt/OpenSeeFace) | v1.20.5 | BSD-2 |
-| [tsunehimatoi/psd2live](https://github.com/tsunehimatoi/psd2live) | `c8ad876` | GPL-3.0-only |
+| 上游 | 版本/提交 | 许可 | 是否修改上游 |
+|---|---|---|---|
+| [erodozer/open-vt](https://github.com/erodozer/open-vt) | `4919304` | MIT（含 Godot 引擎 MIT） | 否 |
+| [emilianavt/OpenSeeFace](https://github.com/emilianavt/OpenSeeFace) | v1.20.5 | BSD-2（代码**与模型**） | 否 |
+| [tsunehimatoi/psd2live](https://github.com/tsunehimatoi/psd2live) | `c8ad876` | GPL-3.0-only | **是**，3 行，见下 |
 
-各包把上游许可证装到 `/usr/share/licenses/<pkgname>/`。本仓库只做打包，不含任何上游源码修改
-（唯一的例外是 `psd2live` 的那份 PKGBUILD 里带一个小的 `groupIndex` 兼容性补丁，
-见 `docs/PATCHES.md` §27）。
+许可证文件都装到 `/usr/share/licenses/<pkgname>/`：
+
+- `open-vt-bin` —— MIT 全文 + 上游 `license/` 下全部四个第三方许可（ayagami / gdvirtualcamera / godotvrm / keylogger）
+- `openseeface` —— BSD-2 全文 + `Licenses/` 下 **12** 个第三方库许可（onnxruntime / OpenCV /
+  Pytorch_Retinaface / libsvm / scikit-image / ThunderSVM …）。
+  上游 README 明确要求：**分发本程序时要一并分发 `Licenses/` 目录**。
+- `psd2live-bin` —— GPL-3.0 全文
+
+### psd2live 的 GPL-3 源码义务
+
+`psd2live-bin` **不是上游原样构建**。构建时的工作树相对 `c8ad876` 有 3 行改动
+（`src/main/kotlin/io/github/psd2live/core/RigBuilder.kt`、
+`src/main/kotlin/org/umamo/interop/moc3/export/Moc3RenderOrderLowering.kt`、
+`gradle/wrapper/gradle-wrapper.properties`）以及 `gradlew` 的权限位变化 ——
+目的是让导出的 moc3 能通过 OpenVT 的严格校验。
+
+按 GPL-3 第 6 条，分发该二进制必须同时提供**对应源码**（只给上游链接不满足）。
+所以每个 Release 都附一个：
+
+```
+psd2live-0.7.1.r1.c8ad876-corresponding-source.tar.zst
+```
+
+内含 `git archive c8ad876` 的完整源码树 + 覆盖上述改动后的文件 + 补丁副本 +
+`README-corresponding-source.txt`（写明上游地址、基准提交、改动清单和重建方式）。
+由 `scripts/make_corresponding_source.sh` 生成，`scripts/release_github.sh` 每次自动重建。
+
+### Live2D / Cubism
+
+OpenVT 上游明确写着它是 *"built in Godot with entirely open source solutions"*，
+没有链接 Cubism SDK；moc3 的读取由 ayagami 自己实现。因此本仓库不涉及 Live2D 的 SDK 授权条款，
+也不分发任何 Live2D 模型。
