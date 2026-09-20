@@ -1,0 +1,348 @@
+{
+  "expressions": {
+    "shiro-1600.jito": {
+      "groups": [],
+      "path": "shiro-1600.jito.exp3.json"
+    },
+    "shiro-1600.neutral": {
+      "groups": [],
+      "path": "shiro-1600.neutral.exp3.json"
+    },
+    "shiro-1600.smile": {
+      "groups": [],
+      "path": "shiro-1600.smile.exp3.json"
+    },
+    "shiro-1600.surprise": {
+      "groups": [],
+      "path": "shiro-1600.surprise.exp3.json"
+    },
+    "shiro-1600.usume": {
+      "groups": [],
+      "path": "shiro-1600.usume.exp3.json"
+    },
+    "shiro-1600.winkL": {
+      "groups": [],
+      "path": "shiro-1600.winkL.exp3.json"
+    },
+    "shiro-1600.winkR": {
+      "groups": [],
+      "path": "shiro-1600.winkR.exp3.json"
+    }
+  },
+  "graphs": {
+    "VTS_Hotkeys": {
+      "bindings": [],
+      "enabled": true,
+      "nodes": []
+    },
+    "VTS_Parameters": {
+      "bindings": [
+        {
+          "dst": "9440",
+          "dst_slot": "ParamAngleX",
+          "src": "8184",
+          "src_slot": "FaceAngleX"
+        },
+        {
+          "dst": "9440",
+          "dst_slot": "ParamAngleY",
+          "src": "8184",
+          "src_slot": "FaceAngleY"
+        },
+        {
+          "dst": "9440",
+          "dst_slot": "ParamAngleZ",
+          "src": "8184",
+          "src_slot": "FaceAngleZ"
+        },
+        {
+          "dst": "9440",
+          "dst_slot": "ParamEyeBallRX",
+          "src": "8184",
+          "src_slot": "EyeRightX"
+        },
+        {
+          "dst": "9440",
+          "dst_slot": "ParamEyeBallRY",
+          "src": "8184",
+          "src_slot": "EyeRightY"
+        },
+        {
+          "dst": "9440",
+          "dst_slot": "ParamMouthOpenY",
+          "src": "8184",
+          "src_slot": "MouthOpen"
+        },
+        {
+          "dst": "9440",
+          "dst_slot": "ParamMouthForm",
+          "src": "8184",
+          "src_slot": "MouthSmile"
+        },
+        {
+          "dst": "9440",
+          "dst_slot": "ParamBrowLY",
+          "src": "8184",
+          "src_slot": "BrowLeftY"
+        },
+        {
+          "dst": "9440",
+          "dst_slot": "ParamBrowRY",
+          "src": "8184",
+          "src_slot": "BrowRightY"
+        },
+        {
+          "dst": "9525",
+          "dst_slot": "Value",
+          "src": "8184",
+          "src_slot": "FacePositionX"
+        },
+        {
+          "dst": "9440",
+          "dst_slot": "ParamBodyAngleX",
+          "src": "9525",
+          "src_slot": "Value"
+        },
+        {
+          "dst": "9587",
+          "dst_slot": "Value",
+          "src": "8184",
+          "src_slot": "FacePositionY"
+        },
+        {
+          "dst": "9440",
+          "dst_slot": "ParamBodyAngleY",
+          "src": "9587",
+          "src_slot": "Value"
+        },
+        {
+          "dst": "9440",
+          "dst_slot": "ParamEyeBallLX",
+          "src": "8184",
+          "src_slot": "EyeLeftX"
+        },
+        {
+          "dst": "9440",
+          "dst_slot": "ParamEyeBallLY",
+          "src": "8184",
+          "src_slot": "EyeLeftY"
+        },
+        {
+          "dst": "9101",
+          "dst_slot": "Value",
+          "src": "8184",
+          "src_slot": "EyeOpenLeft"
+        },
+        {
+          "dst": "9440",
+          "dst_slot": "ParamEyeLOpen",
+          "src": "9101",
+          "src_slot": "Value"
+        },
+        {
+          "dst": "9102",
+          "dst_slot": "Value",
+          "src": "8184",
+          "src_slot": "EyeOpenRight"
+        },
+        {
+          "dst": "9440",
+          "dst_slot": "ParamEyeROpen",
+          "src": "9102",
+          "src_slot": "Value"
+        }
+      ],
+      "enabled": true,
+      "nodes": [
+        {
+          "id": "8184",
+          "parameters": {
+            "type": "Camera"
+          },
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "type": "tracking_input"
+        },
+        {
+          "id": "9440",
+          "parameters": {},
+          "position": {
+            "x": 1477.0,
+            "y": 0.0
+          },
+          "type": "model_output"
+        },
+        {
+          "id": "9525",
+          "parameters": {
+            "a": {
+              "x": -15.0,
+              "y": 15.0
+            },
+            "b": {
+              "x": -10.0,
+              "y": 10.0
+            }
+          },
+          "position": {
+            "x": 488.0,
+            "y": 0.0
+          },
+          "type": "rangemap"
+        },
+        {
+          "id": "9587",
+          "parameters": {
+            "a": {
+              "x": -15.0,
+              "y": 15.0
+            },
+            "b": {
+              "x": -10.0,
+              "y": 10.0
+            }
+          },
+          "position": {
+            "x": 488.0,
+            "y": 209.0
+          },
+          "type": "rangemap"
+        },
+        {
+          "id": "9101",
+          "parameters": {
+            "a": {
+              "x": 0.349999994039536,
+              "y": 1.0
+            },
+            "b": {
+              "x": 0.0,
+              "y": 1.0
+            }
+          },
+          "position": {
+            "x": 1100.0,
+            "y": 0.0
+          },
+          "type": "rangemap"
+        },
+        {
+          "id": "9102",
+          "parameters": {
+            "a": {
+              "x": 0.349999994039536,
+              "y": 1.0
+            },
+            "b": {
+              "x": 0.0,
+              "y": 1.0
+            }
+          },
+          "position": {
+            "x": 1100.0,
+            "y": 209.0
+          },
+          "type": "rangemap"
+        }
+      ]
+    }
+  },
+  "modifiers": {
+    "{ \"parts\": { &\"PartBody\": <RefCounted#-9223371870961658682>, &\"PartExtra\": <RefCounted#-9223371870944881465>, &\"PartFace\": <RefCounted#-9223371870928104248>, &\"PartHairBack\": <RefCounted#-9223371870911327031>, &\"PartHairFront\": <RefCounted#-9223371870894549814>, &\"PartHead\": <RefCounted#-9223371870877772597>, &\"PartHeadAccessories\": <RefCounted#-9223371870860995380> }, \"meshes\": { &\"ArtMeshTail\": <RefCounted#-9223371871817296749>, &\"ArtMeshBackHair\": <RefCounted#-9223371871800519532>, &\"ArtMeshFootwear\": <RefCounted#-9223371871783742315>, &\"ArtMeshLegwear\": <RefCounted#-9223371871766965098>, &\"ArtMeshHandwearR\": <RefCounted#-9223371871750187881>, &\"ArtMeshNeck\": <RefCounted#-9223371871733410664>, &\"ArtMeshTopwear\": <RefCounted#-9223371871716633447>, &\"ArtMeshHandwearL\": <RefCounted#-9223371871699856230>, &\"ArtMeshFace\": <RefCounted#-9223371871683079013>, &\"ArtMeshEarsR\": <RefCounted#-9223371871666301796>, &\"ArtMeshEarsL\": <RefCounted#-9223371871649524579>, &\"ArtMeshMouth\": <RefCounted#-9223371871632747362>, &\"ArtMeshMouth_lip_1\": <RefCounted#-9223371871615970145>, &\"ArtMeshMouth_lip_0\": <RefCounted#-9223371871599192928>, &\"ArtMeshNose\": <RefCounted#-9223371871582415711>, &\"ArtMeshEyebrowL\": <RefCounted#-9223371871565638494>, &\"ArtMeshEyewhiteR\": <RefCounted#-9223371871548861277>, &\"ArtMeshEyewhiteL\": <RefCounted#-9223371871532084060>, &\"ArtMeshEyebrowR\": <RefCounted#-9223371871515306843>, &\"ArtMeshIridesR\": <RefCounted#-9223371871498529626>, &\"ArtMeshEyelashR\": <RefCounted#-9223371871481752409>, &\"ArtMeshIridesL\": <RefCounted#-9223371871464975192>, &\"ArtMeshEyelashL\": <RefCounted#-9223371871448197975>, &\"ArtMeshFrontHair\": <RefCounted#-9223371871431420758> }, \"parameters\": { &\"ParamAngleX\": <RefCounted#-9223371871414643541>, &\"ParamAngleY\": <RefCounted#-9223371871397866324>, &\"ParamAngleZ\": <RefCounted#-9223371871381089107>, &\"ParamArmSwingL\": <RefCounted#-9223371871364311890>, &\"ParamArmSwingR\": <RefCounted#-9223371871347534673>, &\"ParamBodyAngleX\": <RefCounted#-9223371871330757456>, &\"ParamBodyAngleY\": <RefCounted#-9223371871313980239>, &\"ParamBodyAngleZ\": <RefCounted#-9223371871297203022>, &\"ParamBreath\": <RefCounted#-9223371871280425805>, &\"ParamBrowLY\": <RefCounted#-9223371871263648588>, &\"ParamBrowRY\": <RefCounted#-9223371871246871371>, &\"ParamBust\": <RefCounted#-9223371871230094154>, &\"ParamBustX\": <RefCounted#-9223371871213316937>, &\"ParamEyeBallForm\": <RefCounted#-9223371871196539720>, &\"ParamEyeBallLX\": <RefCounted#-9223371871179762503>, &\"ParamEyeBallLY\": <RefCounted#-9223371871162985286>, &\"ParamEyeBallRX\": <RefCounted#-9223371871146208069>, &\"ParamEyeBallRY\": <RefCounted#-9223371871129430852>, &\"ParamEyeBallX\": <RefCounted#-9223371871112653635>, &\"ParamEyeBallY\": <RefCounted#-9223371871095876418>, &\"ParamEyeLOpen\": <RefCounted#-9223371871079099201>, &\"ParamEyeROpen\": <RefCounted#-9223371871062321984>, &\"ParamHairBack\": <RefCounted#-9223371871045544767>, &\"ParamHairFront\": <RefCounted#-9223371871028767550>, &\"ParamMouthForm\": <RefCounted#-9223371871011990333>, &\"ParamMouthOpenY\": <RefCounted#-9223371870995213116>, &\"ParamTailSway\": <RefCounted#-9223371870978435899> } }": {
+      "ParamAngleX": {
+        "visible": true
+      },
+      "ParamAngleY": {
+        "visible": true
+      },
+      "ParamAngleZ": {
+        "visible": true
+      },
+      "ParamArmSwingL": {
+        "visible": true
+      },
+      "ParamArmSwingR": {
+        "visible": true
+      },
+      "ParamBodyAngleX": {
+        "visible": true
+      },
+      "ParamBodyAngleY": {
+        "visible": true
+      },
+      "ParamBodyAngleZ": {
+        "visible": true
+      },
+      "ParamBreath": {
+        "visible": true
+      },
+      "ParamBrowLY": {
+        "visible": true
+      },
+      "ParamBrowRY": {
+        "visible": true
+      },
+      "ParamBust": {
+        "visible": true
+      },
+      "ParamBustX": {
+        "visible": true
+      },
+      "ParamEyeBallForm": {
+        "visible": true
+      },
+      "ParamEyeBallLX": {
+        "visible": true
+      },
+      "ParamEyeBallLY": {
+        "visible": true
+      },
+      "ParamEyeBallRX": {
+        "visible": true
+      },
+      "ParamEyeBallRY": {
+        "visible": true
+      },
+      "ParamEyeBallX": {
+        "visible": true
+      },
+      "ParamEyeBallY": {
+        "visible": true
+      },
+      "ParamEyeLOpen": {
+        "visible": true
+      },
+      "ParamEyeROpen": {
+        "visible": true
+      },
+      "ParamHairBack": {
+        "visible": true
+      },
+      "ParamHairFront": {
+        "visible": true
+      },
+      "ParamMouthForm": {
+        "visible": true
+      },
+      "ParamMouthOpenY": {
+        "visible": true
+      },
+      "ParamTailSway": {
+        "visible": true
+      }
+    }
+  },
+  "quality": {
+    "filter": "linear"
+  },
+  "transform": {
+    "position": {
+      "x": 410.0,
+      "y": 901.5
+    },
+    "rotation": 0.0,
+    "scale": 1.2314453125
+  }
+}
