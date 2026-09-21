@@ -14,7 +14,7 @@
 # 1) 追加到 /etc/pacman.conf 末尾
 [vtb]
 SigLevel = Optional TrustAll
-Server = https://github.com/tc1911/vtb-pkgs/releases/latest/download
+Server = https://github.com/tc1911/vtb-bin/releases/latest/download
 
 # 2) 整体更新（别只 -Sy）
 sudo pacman -Syu
@@ -26,7 +26,7 @@ sudo pacman -S open-vt-bin openseeface psd2live-bin
 国内直连 GitHub 不稳的话，`Server` 换成 gh-proxy 前缀即可：
 
 ```
-Server = https://gh-proxy.com/https://github.com/tc1911/vtb-pkgs/releases/latest/download
+Server = https://gh-proxy.com/https://github.com/tc1911/vtb-bin/releases/latest/download
 ```
 
 `SigLevel = Optional TrustAll` 是因为这个仓库不做 gpg 签名。请只在你信任本仓库内容的前提下使用。

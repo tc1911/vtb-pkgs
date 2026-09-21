@@ -1,4 +1,4 @@
-# vtb-pkgs
+# vtb-bin
 
 把 **OpenVT**（原生的 Live2D 运行时）、**openseeface**（摄像头面捕后端）、**psd2live**（PSD → 绑定模型的 GUI）
 做成 Arch Linux 的 pacman 包。
@@ -16,7 +16,7 @@
 ```ini
 [vtb]
 SigLevel = Optional TrustAll
-Server = https://github.com/tc1911/vtb-pkgs/releases/latest/download
+Server = https://github.com/tc1911/vtb-bin/releases/latest/download
 ```
 
 > 没做 gpg 签名，所以是 `Optional TrustAll`。介意的话可以自己拿 `SHA256SUMS` 校验。
@@ -24,7 +24,7 @@ Server = https://github.com/tc1911/vtb-pkgs/releases/latest/download
 > 国内直连 GitHub 不通时，把 `Server` 换成代理前缀（`gh-proxy.com` 实测能代理 release 资源）：
 >
 > ```ini
-> Server = https://gh-proxy.com/https://github.com/tc1911/vtb-pkgs/releases/latest/download
+> Server = https://gh-proxy.com/https://github.com/tc1911/vtb-bin/releases/latest/download
 > ```
 
 然后：
